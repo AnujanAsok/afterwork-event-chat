@@ -1,4 +1,1 @@
 .env
-# Ignore virtual environment files
-venv/
-pyvenv.cfg
