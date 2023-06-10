@@ -109,7 +109,7 @@ email_tools=[
     # )
 ]
 # agent_chain = initialize_agent(tools, llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
-agent_chain = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+agent_chain = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, )
 # agent_prompt = ChatOpenAI(temperature=0, model_name='gpt-3.5-turbo')
 agent_prompt = ConversationChain(llm=OpenAI(temperature=0), memory=ConversationBufferMemory(), verbose=True) 
 # st.session_state.buffer_memory
@@ -126,27 +126,27 @@ output_parser = CommaSeparatedListOutputParser()
 
 details_template="""You are an event planner assistant
 
-Your goal is to check the Human below, and return relevant results. 
+Your goal is to check the Human below, and return relevant results.
 
 You must not fill in any information on behalf of the human, they must enter the details themselves.
 
-Only when you feel that you have the adequate details required to find the vendors for the human, you must return the phrase: Great, Give me a minute to find you the best vendors for your event. Additionally, I want you to summarize the event details and return that as well.
+Only when you feel that you have the adequate details required to find the vendors for the human, you must ask the user if they would like to see a list of vendors. If they respond with yes, then you must return the phrase: Great, Give me a minute to fetch your recommendations. Additionally, I want you to summarize the event details and return that as well.
+
 
 Human: {human_input}
 Assistant:"""
 
 vendor_template="""You are an event vendor search tool
 
-Your goal is to use the event details below to find vendors that can fulfill the requirements. You must return:
- - The vendors name
- - A brief description of the vendor
- - The address of the vendor
- - The website url of the vendor
- - The contact email for the vendor
+Your goal is to use the event details below to find vendors that can fulfill the requirements. You can ignore the budget. You must return the important information of that vendor for the user.
 
-You should use the search tool to verify that the information is up to date.
+You should use the search tool to verify that the information is up to date. Ensure that your final answer is the vendor information, nothing else is needed.
 
-Once you have fulfilled the task, return the list of vendors with the required information as key value pairs. You do not need a tool for this step.
+Try your best to include the vendors name, their website and email in your answer.
+
+The search tool is the only tool that you have, so do not try to use anything else. 
+
+
 event details: {event_details}
 event vendor search tool:"""
 
@@ -214,6 +214,7 @@ def fetch_vendors(event_details):
 def checking_output(input):
     response = fetch_results(input)
     print(response)
+    print("fetch your recommendations." in response)
     print("best vendors for your event")
     if "fetch your recommendations." in response:
         print("The output contains the specified phrase.")
