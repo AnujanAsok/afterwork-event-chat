@@ -183,31 +183,6 @@ llm_router = OpenAI(temperature=0)
 
 destination_chains = {}
 
-# for p_info in prompt_infos:
-#     name=p_info['name']
-#     prompt_template=p_info['prompt_template']
-#     prompt=PromptTemplate(template=prompt_template, input_variables=['input'])
-#     chain= LLMChain(llm=llm_router, prompt=prompt)
-#     destination_chains[name]= chain
-# default_chain = ConversationChain(llm=llm_router, output_key='text')
-
-# destinations = [f"{p['name']}: {p['description']}" for p in prompt_infos]
-# destinations_str = "\n".join(destinations)
-# router_template = MULTI_PROMPT_ROUTER_TEMPLATE.format(
-#     destinations=destinations_str
-# )
-# router_prompt = PromptTemplate(
-#     template=router_template,
-#     input_variables=["input"],
-#     output_parser=RouterOutputParser(),
-# )
-# router_chain = LLMRouterChain.from_llm(llm_router, router_prompt)
-
-# router_chain=LLMRouterChain.from_llm(llm_router, router_prompt)
-
-# chain=MultiPromptChain(router_chain=router_chain,
-# destination_chains=destination_chains, default_chain=default_chain, verbose=True)
-
 
 prompt = PromptTemplate(
     input_variables = ["human_input"],
@@ -257,69 +232,6 @@ def checking_output(input):
         print("The output does not contain the specified phrase.")
     
     return response
-
-
-# def send_vendor_emails (vendor_details):
-#     formatted_response = email_prompt.format(vendor_list=vendor_details)
-#     vendor_confirmation = agent_emailer.run(formatted_response)
-#     return vendor_confirmation
-
-
-    
-
-# # with gr.Blocks() as landing:
-
-# #     with gr.Row(visible=False, elem_id="vendor_selector") as confirmation_row:
-# #         vendor_textbox = gr.Textbox(label='Enter the name of the vendors that you have selected')
-# #         confirmation_output = gr.Textbox()
-# #         vendor_btn = gr.Button("Submit selections")
-# #         vendor_btn.click(fn=send_vendor_emails, inputs=[vendor_textbox], outputs=confirmation_output)
-
-# #     with gr.Row(elem_id="request_selector"):
-# #         textbox = gr.Textbox(label='Enter your request')
-# #         output_text = gr.Textbox()
-
-# #     btn = gr.Button("Send query")
-# #     btn.click(fn=checking_output, inputs=textbox, outputs=output_text)
-
-
-# # textbox = gr.Textbox(label='Enter your request')
-# # output_text = gr.Textbox()
-# # interface = gr.Interface(fn=checking_output, inputs=textbox, outputs=output_text, title='Text AI')
-# # interface.launch()
-
-# # landing.launch()
-
-# # textbox = gr.inputs.Textbox(label='Enter your request')
-# # button = gr.inputs.Dropdown(['Fetch results'], type='value')
-# # output_text = gr.outputs.Textbox()
-
-# # interface = gr.Interface(fn=checking_output, inputs=textbox, outputs=output_text, title='Text AI')
-# # interface.launch()
-
-
-
-# st.set_page_config("EventplannerGPT", page_icon=":robot:")
-
-# if 'responses' not in st.session_state:
-#         st.session_state['responses'] = []
-
-# if 'requests' not in st.session_state:
-#         st.session_state['requests'] = []
-
-# query = st.text_input("Query: ", key='input')
-# if query:
-#         fetch_answer = checking_output(query)
-#         response = agent_prompt.run(fetch_answer)
-#         st.session_state.requests.append(query)
-#         st.session_state.responses.append(response)
-
-#         for i in range(len(st.session_state['responses'])-1, -1, -1):
-#             message(st.session_state['responses'][i], key=str(i))
-#             message(st.session_state['requests'][i], is_user=True, key=str(i) + '_user')
-
-
-
 
 with gr.Blocks(css="footer {visibility: hidden}, header {visibility: hidden}", title="EventPlannerGPT", theme="soft") as demo:
     eventPlannerGPT = gr.Chatbot()
